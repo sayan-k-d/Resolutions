@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: laravel-app
+    plan: free
+    dockerfilePath: ./Dockerfile
+    buildCommand: |
+      composer install --optimize-autoloader --no-dev
+      php artisan key:generate
+      php artisan migrate --force
+    startCommand: |
+      php artisan config:cache
+      php artisan route:cache
+      php artisan serve --host 0.0.0.0 --port $PORT
+    runtime: static
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        value: your-database-host
+      - key: DB_PORT
+        value: 3306
+      - key: DB_DATABASE
+        value: your-database-name
+      - key: DB_USERNAME
+        value: your-database-username
+      - key: DB_PASSWORD
+        value: your-database-password
