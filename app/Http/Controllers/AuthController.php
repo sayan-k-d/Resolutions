@@ -24,116 +24,161 @@ class AuthController extends Controller
 
     public function signin(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string|min:6',
-        ]);
+        try {
+            $request->validate([
+                'email' => 'required|email',
+                'password' => 'required|string|min:6',
+            ]);
 
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            return redirect()->route('dashboard');
+            if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+                return redirect()->route('dashboard');
+            }
+            return redirect()->back()->with('error', 'The provided credentials do not match our records.')->withInput($request->only('email', 'remember'));
+        } catch (\Exception $e) {
+            //throw $th;
+            return redirect()->back()->with('error', $e->message);
         }
-        return redirect()->back()->with('error', 'The provided credentials do not match our records.')->withInput($request->only('email', 'remember'));
 
     }
     public function register(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|min:3',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|string|min:6',
-        ]);
+        try {
+            $request->validate([
+                'name' => 'required|string|min:3',
+                'email' => 'required|email|unique:users',
+                'password' => 'required|string|min:6',
+            ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-        ]);
-        Auth::login($user);
-        return redirect()->route('dashboard');
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+            ]);
+            Auth::login($user);
+            return redirect()->route('dashboard');
+        } catch (\Exception $e) {
+            //throw $th;
+            return redirect()->back()->with('error', $e->message);
+        }
     }
 
     public function logout()
     {
-        Auth::logout();
-        return redirect()->route('dashboard');
+        try {
+            Auth::logout();
+            return redirect()->route('dashboard');
+        } catch (\Exception $e) {
+            //throw $th;
+            return redirect()->back()->with('error', $e->message);
+        }
     }
 
     public function profile()
     {
-        $user = Auth::user();
-        $resolutions = Resolution::where('user_id', $user->id)->get();
-        return view('Dashboard.layout.profile', compact('user', 'resolutions'));
+        try {
+            $user = Auth::user();
+            $resolutions = Resolution::where('user_id', $user->id)->get();
+            return view('Dashboard.layout.profile', compact('user', 'resolutions'));
+        } catch (\Exception $e) {
+            //throw $th;
+            return redirect()->back()->with('error', $e->message);
+        }
     }
 
     public function edit()
     {
-        $user = Auth::user();
-        $resolutions = Resolution::where('user_id', $user->id)->get();
-        $editProfile = true;
-        return view('Dashboard.layout.profile', compact('user', 'resolutions', 'editProfile'));
+        try {
+            $user = Auth::user();
+            $resolutions = Resolution::where('user_id', $user->id)->get();
+            $editProfile = true;
+            return view('Dashboard.layout.profile', compact('user', 'resolutions', 'editProfile'));
+        } catch (\Exception $e) {
+            //throw $th;
+            return redirect()->back()->with('error', $e->message);
+        }
     }
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'name' => 'required|string|min:3',
-            'email' => 'required|email',
-        ]);
+        try {
+            $request->validate([
+                'name' => 'required|string|min:3',
+                'email' => 'required|email',
+            ]);
 
-        $user = User::find($id);
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->save();
+            $user = User::find($id);
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->save();
 
-        return redirect()->route('profile');
+            return redirect()->route('profile');
+        } catch (\Exception $e) {
+            //throw $th;
+            return redirect()->back()->with('error', $e->message);
+        }
     }
 
     public function deleteProfile($id)
     {
-        $user = User::find($id);
+        try {
+            $user = User::find($id);
 
-        if ($user && auth()->id() === $user->id) {
-            $comments = Comment::where('user_id', $user->id)->pluck('resolution_id')->toArray();
-            $likes = Like::where('user_id', $user->id)->pluck('resolution_id')->toArray();
-            $resolutions = Resolution::whereIn('id', $comments)->get();
-            foreach ($resolutions as $key => $resolution) {
-                $totalComments = $resolution->comments;
-                $resolution->comments = $totalComments - 1;
-                $resolution->save();
+            if ($user && auth()->id() === $user->id) {
+                $comments = Comment::where('user_id', $user->id)->pluck('resolution_id')->toArray();
+                $likes = Like::where('user_id', $user->id)->pluck('resolution_id')->toArray();
+                $resolutions = Resolution::whereIn('id', $comments)->get();
+                foreach ($resolutions as $key => $resolution) {
+                    $totalComments = $resolution->comments;
+                    $resolution->comments = $totalComments - 1;
+                    $resolution->save();
+                }
+                $resolutions = Resolution::whereIn('id', $likes)->get();
+                // dd($resolutions);
+                foreach ($resolutions as $key => $resolution) {
+                    $totalLikes = $resolution->likes;
+                    $resolution->likes = $totalLikes - 1;
+                    $resolution->save();
+                }
+                $user->delete();
+                return redirect()->route('signup');
             }
-            $resolutions = Resolution::whereIn('id', $likes)->get();
-            // dd($resolutions);
-            foreach ($resolutions as $key => $resolution) {
-                $totalLikes = $resolution->likes;
-                $resolution->likes = $totalLikes - 1;
-                $resolution->save();
-            }
-            $user->delete();
-            return redirect()->route('signup');
+            return redirect()->back()->with(['error' => 'You are not authorized to delete this User.']);
+        } catch (\Exception $e) {
+            //throw $th;
+            return redirect()->back()->with('error', $e->message);
         }
-        return redirect()->back()->with(['error' => 'You are not authorized to delete this User.']);
     }
 
     public function changePassword()
     {
-        $user = Auth::user();
-        $resolutions = Resolution::where('user_id', $user->id)->get();
-        $editPassword = true;
-        return view('Dashboard.layout.profile', compact('user', 'resolutions', 'editPassword'));
+        try {
+            $user = Auth::user();
+            $resolutions = Resolution::where('user_id', $user->id)->get();
+            $editPassword = true;
+            return view('Dashboard.layout.profile', compact('user', 'resolutions', 'editPassword'));
+        } catch (\Exception $e) {
+            //throw $th;
+            return redirect()->back()->with('error', $e->message);
+        }
     }
 
     public function updatePassword(Request $request, $id)
     {
-        $request->validate([
-            'oldPassword' => 'required|string|min:6',
-            'password' => 'required|string|min:6',
-        ]);
+        try {
+            $request->validate([
+                'oldPassword' => 'required|string|min:6',
+                'password' => 'required|string|min:6',
+            ]);
 
-        $user = User::find($id);
-        if (Auth::check() && Hash::check($request->oldPassword, $user->password)) {
-            $user->password = bcrypt($request->password);
-            $user->save();
-            return redirect()->route('profile');
+            $user = User::find($id);
+            if (Auth::check() && Hash::check($request->oldPassword, $user->password)) {
+                $user->password = bcrypt($request->password);
+                $user->save();
+                return redirect()->route('profile');
+            }
+            return redirect()->back()->with(['error' => 'The provided old password is incorrect.']);
+        } catch (\Exception $e) {
+            //throw $th;
+            return redirect()->back()->with('error', $e->message);
         }
-        return redirect()->back()->with(['error' => 'The provided old password is incorrect.']);
     }
 }

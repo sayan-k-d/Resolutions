@@ -7,10 +7,15 @@
     background-color: #4d4d4d;
     cursor: pointer;
 } */
+ .dashboard{
+    min-height: 90vh;
+ }
 .dashboard,
 .profile {
     background: #1b263b;
-
+    .resolution-container {
+        padding-bottom: 4rem;
+    }
     .card {
         max-width: 600px;
         width: 100%;
@@ -49,6 +54,25 @@
 @media (max-width: 1080px) {
     .modal .comments-modal {
         min-width: 100%;
+    }
+}
+
+/* Footer Styling */
+.footer {
+    color: #6c757d;
+    text-align: center; /* Center the text */
+    padding: 0.5rem 0; /* Padding for spacing */
+    position: fixed; /* Fixed position at the bottom */
+    bottom: 0;
+    width: 100%; /* Full width */
+    font-size: 14px; /* Adjust font size */
+}
+
+/* Responsive Design for Small Screens */
+@media screen and (max-width: 600px) {
+    .footer {
+        font-size: 12px; /* Smaller text on small screens */
+        padding: 15px 0; /* Reduced padding */
     }
 }
 

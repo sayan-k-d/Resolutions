@@ -6,7 +6,7 @@
         {{-- <x-slot:auth>
             {{ @$name }}
         </x-slot:auth> --}}
-        <div class="dashboard w-100 h-100 min-vh-100">
+        <div class="dashboard w-100 h-100">
             {{-- @dd(@$name) --}}
             <div class="container-fluid">
                 <div class="d-flex justify-content-between align-items-center py-4">
@@ -26,7 +26,7 @@
                         <button class="btn btn-outline-light" type="submit">Search</button>
                     </form>
                 </div>
-                <div class="d-flex flex-wrap justify-content-center gap-4">
+                <div class="d-flex flex-wrap justify-content-center gap-4 resolution-container">
                     @foreach ($resolutions as $resolution)
                         <div class="card">
                             <div class="card-header d-flex justify-content-between">
