@@ -112,6 +112,7 @@
     bottom: 0;
     width: 100%; /* Full width */
     font-size: 14px; /* Adjust font size */
+    z-index: 2;
 }
 
 /* Responsive Design for Small Screens */
