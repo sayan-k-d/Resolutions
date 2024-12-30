@@ -12,8 +12,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.15.2/dist/sweetalert2.min.css"
         integrity="sha256-PFxP4VzO//YWpakxkrmQGdaTZS+qrhXUmXQ3DZveRcc=" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="stylesheet" href="{{ asset('public/assets/css/style.css') }}">
-    <link rel="icon" href="{{ asset('public/assets/img/favicon.png') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    <link rel="icon" href="{{ asset('assets/img/favicon.png') }}" />
 </head>
 
 <body>
@@ -61,6 +61,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
 </script>
-<script src="{{ asset('public/assets/js/dashboard.js') }}"></script>
+<script src="{{ asset('assets/js/dashboard.js') }}"></script>
 
 </html>
