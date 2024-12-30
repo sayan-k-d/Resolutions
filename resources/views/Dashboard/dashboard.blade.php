@@ -14,9 +14,11 @@
                     </h1>
                     <h2 class="text-white d-none page-heading-h2">Welcome, {{ Auth::user()->name ?? 'Guest' }}
                     </h2>
-                    <div><button class="btn btn-light" id="addResolutionButton" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal">+ Add
-                            Resolution</button></div>
+                    @if ($resolutions->count() > 0)
+                        <div><button class="btn btn-light" id="addResolutionButton" data-bs-toggle="modal"
+                                data-bs-target="#exampleModal">+ Add
+                                Resolution</button></div>
+                    @endif
                 </div>
                 <div class="mb-3 display-search d-none">
                     <form action="{{ route('search') }}" role="search" class="d-flex" method="GET">
@@ -27,6 +29,21 @@
                     </form>
                 </div>
                 <div class="d-flex flex-wrap justify-content-center gap-4 resolution-container">
+
+                    @if ($resolutions->count() == 0)
+                        <div class="no-resolutions-container d-flex justify-content-center align-items-center">
+                            {{-- <div id="fireworks"></div> --}}
+                            <canvas id="confetti-canvas"></canvas>
+                            <div class="no-resolutions-text animate__animated animate__bounceIn">
+                                <h2>✨ Your Resolution Journal Awaits! ✨</h2>
+                                <p>Ready to conquer your goals? Start by creating your first resolution now! 🚀</p>
+                                <button class="btn btn-light mt-4 animate__animated animate__pulse animate__infinite"
+                                    id="addResolutionButton" data-bs-toggle="modal" data-bs-target="#exampleModal">+ Add
+                                    Resolution</button>
+
+                            </div>
+                        </div>
+                    @endif
                     @foreach ($resolutions as $resolution)
                         <div class="card">
                             <div class="card-header d-flex justify-content-between">
@@ -45,15 +62,16 @@
                                     <form method="POST" action="{{ route('likes', ['id' => $resolution->id]) }}"
                                         class="like-post d-flex align-items-center gap-2">
                                         @csrf
-                                        <button type="submit" class="like-button">
+                                        <button type="submit" class="like-button"
+                                            @if (!Auth::check()) disabled @endif>
                                             @if (Auth::check() && in_array($resolution->id, $likes))
                                                 <i class="bi bi-suit-heart-fill text-danger"></i>
                                             @else
                                                 <i class="bi bi-heart"></i>
                                             @endif
                                         </button>
-                                        <div class="counts text-center">{{ $resolution->likes }}</div>
                                     </form>
+                                    <div class="counts text-center">{{ $resolution->likes }}</div>
 
                                     <form action="{{ route('comments', ['id' => $resolution->id]) }}" method="get"
                                         class="comment-post d-flex align-items-center gap-2">
@@ -97,11 +115,13 @@
                                 <textarea class="resolution-area form-control" id="exampleFormControlTextarea1" rows="3" name="description"
                                     required></textarea>
                             </div>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" role="switch"
-                                    id="flexSwitchCheckDefault" name="status" value="checked">
-                                <label class="form-check-label" for="flexSwitchCheckDefault">Private</label>
-                            </div>
+                            @if (Auth::check())
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch"
+                                        id="flexSwitchCheckDefault" name="status" value="checked">
+                                    <label class="form-check-label" for="flexSwitchCheckDefault">Private</label>
+                                </div>
+                            @endif
                             {{-- <button type="submit" class="btn btn-primary">Submit</button> --}}
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
@@ -369,7 +389,7 @@
                     icon: "error",
                     text: "{{ session('error') }}",
                     showConfirmButton: false,
-                    timer: 1500
+                    timer: 10000
                 });
             </script>
         @endif
@@ -468,5 +488,43 @@
             // Adjust on window resize
             window.addEventListener('resize', adjustButtonClass);
         </script>
+        {{-- <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const container = document.getElementById('fireworks');
+                const fireworks = new Fireworks(container, {
+                    speed: 2,
+                    particles: 150,
+                    intensity: 30,
+                });
+                fireworks.start();
+            });
+        </script> --}}
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const canvas = document.getElementById('confetti-canvas');
+                const confettiCreation = confetti.create(canvas, {
+                    resize: true,
+                    useWorker: true,
+                });
+
+                const fireConfetti = () => {
+                    confettiCreation({
+                        particleCount: 100,
+                        spread: 70,
+                        origin: {
+                            x: 0.5,
+                            y: 0.5
+                        },
+                        colors: ['#ff6b6b', '#feca57', '#1dd1a1', '#5f27cd', '#54a0ff', '#00d2d3'],
+                    });
+                };
+
+                fireConfetti();
+
+                // Repeat the animation every 2 seconds
+                setInterval(fireConfetti, 2000);
+            });
+        </script>
+
     </x-slot:content>
 </x-general>

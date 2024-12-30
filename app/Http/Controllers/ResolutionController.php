@@ -26,7 +26,7 @@ class ResolutionController extends Controller
             return view('Dashboard.dashboard', ['resolutions' => $resolutions, 'name' => $userName, 'likes' => $likes]);
         } catch (\Exception $e) {
             //throw $th;
-            return redirect()->back()->with('error', $e->message);
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -44,7 +44,7 @@ class ResolutionController extends Controller
             return view('Dashboard.dashboard', ['resolutions' => $resolutions, 'likes' => $likes, 'name' => $userName, 'search' => $request->search]);
         } catch (\Exception $e) {
             //throw $th;
-            return redirect()->back()->with('error', $e->message);
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -52,6 +52,7 @@ class ResolutionController extends Controller
     {
         try {
             $data = $request->validate([
+                'name' => 'nullable|string',
                 'description' => 'required|string',
                 'status' => 'nullable|in:checked',
             ]);
@@ -60,9 +61,10 @@ class ResolutionController extends Controller
             } else {
                 $status = 'public';
             }
-
+            // dd(auth()->id());
+            $name = $data['name'] ? $data['name'] : 'Guest';
             Resolution::create([
-                'name' => auth()->user() ? auth()->user()->name : 'Guest',
+                'name' => auth()->user() ? auth()->user()->name : $name,
                 'description' => $data['description'],
                 'status' => $status,
                 'user_id' => auth()->id(),
@@ -71,7 +73,7 @@ class ResolutionController extends Controller
             return redirect()->route('dashboard')->with('message', 'Resolution saved');
         } catch (\Exception $e) {
             //throw $th;
-            return redirect()->back()->with('error', $e->message);
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -104,7 +106,7 @@ class ResolutionController extends Controller
             // ->with(['likes' => $likes, 'resolutions' => $resolutions]);
         } catch (\Exception $e) {
             //throw $th;
-            return redirect()->back()->with('error', $e->message);
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -136,7 +138,7 @@ class ResolutionController extends Controller
             return redirect()->back()->with('openModal', true)->with('resolutionId', $id)->with('comments', $comments)->with('replies', $replies)->with('resolutionData', $resolution)->with('resolutions', $resolutions)->with('name', $userName);
         } catch (\Exception $e) {
             //throw $th;
-            return redirect()->back()->with('error', $e->message);
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -156,7 +158,7 @@ class ResolutionController extends Controller
             return redirect()->route('dashboard')->with('comments', $comments)->with('replies', $replies)->with('resolutionData', $resolution)->with('resolutions', $resolutions)->with('name', $userName)->with('openModal', true);
         } catch (\Exception $e) {
             //throw $th;
-            return redirect()->back()->with('error', $e->message);
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -182,7 +184,7 @@ class ResolutionController extends Controller
             return redirect()->back()->with(['error' => 'You are not authorized to edit this Comment.']);
         } catch (\Exception $e) {
             //throw $th;
-            return redirect()->back()->with('error', $e->message);
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -211,7 +213,7 @@ class ResolutionController extends Controller
             return redirect()->back()->with(['error' => 'You are not authorized to Update this Resolution.']);
         } catch (\Exception $e) {
             //throw $th;
-            return redirect()->back()->with('error', $e->message);
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -238,7 +240,7 @@ class ResolutionController extends Controller
             return redirect()->back()->with(['error' => 'You are not authorized to delete this Comment.']);
         } catch (\Exception $e) {
             //throw $th;
-            return redirect()->back()->with('error', $e->message);
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -271,7 +273,7 @@ class ResolutionController extends Controller
             return redirect()->back()->with('openModal', true)->with('resolutionId', $resolution_id)->with('comments', $comments)->with('replies', $replies)->with('resolutionData', $resolution)->with('resolutions', $resolutions)->with('name', $userName);
         } catch (\Exception $e) {
             //throw $th;
-            return redirect()->back()->with('error', $e->message);
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -297,7 +299,7 @@ class ResolutionController extends Controller
             return redirect()->back()->with(['error' => 'You are not authorized to edit this Comment.']);
         } catch (\Exception $e) {
             //throw $th;
-            return redirect()->back()->with('error', $e->message);
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
     public function updateReplies(Request $request, $id)
@@ -325,7 +327,7 @@ class ResolutionController extends Controller
             return redirect()->back()->with(['error' => 'You are not authorized to Update this Reply.']);
         } catch (\Exception $e) {
             //throw $th;
-            return redirect()->back()->with('error', $e->message);
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
     public function deleteReply(Request $request, $id)
@@ -347,7 +349,7 @@ class ResolutionController extends Controller
             return redirect()->back()->with(['error' => 'You are not authorized to delete this Reply.']);
         } catch (\Exception $e) {
             //throw $th;
-            return redirect()->back()->with('error', $e->message);
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -370,7 +372,7 @@ class ResolutionController extends Controller
             }
         } catch (\Exception $e) {
             //throw $th;
-            return redirect()->back()->with('error', $e->message);
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -385,7 +387,7 @@ class ResolutionController extends Controller
             return redirect()->back()->with(['error' => 'You are not authorized to delete this Resolution.']);
         } catch (\Exception $e) {
             //throw $th;
-            return redirect()->back()->with('error', $e->message);
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -405,7 +407,7 @@ class ResolutionController extends Controller
             return redirect()->back()->with(['error' => 'You are not authorized to edit this Resolution.']);
         } catch (\Exception $e) {
             //throw $th;
-            return redirect()->back()->with('error', $e->message);
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -424,7 +426,7 @@ class ResolutionController extends Controller
             return redirect()->back()->with(['error' => 'You are not authorized to Update this Resolution.']);
         } catch (\Exception $e) {
             //throw $th;
-            return redirect()->back()->with('error', $e->message);
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 }
