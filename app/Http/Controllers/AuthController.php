@@ -36,7 +36,7 @@ class AuthController extends Controller
             return redirect()->back()->with('error', 'The provided credentials do not match our records.')->withInput($request->only('email', 'remember'));
         } catch (\Exception $e) {
             //throw $th;
-            return redirect()->back()->with('error', $e->message);
+            return redirect()->back()->with('error', $e->getMessage());
         }
 
     }
@@ -58,7 +58,7 @@ class AuthController extends Controller
             return redirect()->route('dashboard');
         } catch (\Exception $e) {
             //throw $th;
-            return redirect()->back()->with('error', $e->message);
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -69,7 +69,7 @@ class AuthController extends Controller
             return redirect()->route('dashboard');
         } catch (\Exception $e) {
             //throw $th;
-            return redirect()->back()->with('error', $e->message);
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -81,7 +81,7 @@ class AuthController extends Controller
             return view('Dashboard.layout.profile', compact('user', 'resolutions'));
         } catch (\Exception $e) {
             //throw $th;
-            return redirect()->back()->with('error', $e->message);
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -94,7 +94,7 @@ class AuthController extends Controller
             return view('Dashboard.layout.profile', compact('user', 'resolutions', 'editProfile'));
         } catch (\Exception $e) {
             //throw $th;
-            return redirect()->back()->with('error', $e->message);
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
     public function update(Request $request, $id)
@@ -113,7 +113,7 @@ class AuthController extends Controller
             return redirect()->route('profile');
         } catch (\Exception $e) {
             //throw $th;
-            return redirect()->back()->with('error', $e->message);
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -144,7 +144,7 @@ class AuthController extends Controller
             return redirect()->back()->with(['error' => 'You are not authorized to delete this User.']);
         } catch (\Exception $e) {
             //throw $th;
-            return redirect()->back()->with('error', $e->message);
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -157,7 +157,7 @@ class AuthController extends Controller
             return view('Dashboard.layout.profile', compact('user', 'resolutions', 'editPassword'));
         } catch (\Exception $e) {
             //throw $th;
-            return redirect()->back()->with('error', $e->message);
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -178,7 +178,7 @@ class AuthController extends Controller
             return redirect()->back()->with(['error' => 'The provided old password is incorrect.']);
         } catch (\Exception $e) {
             //throw $th;
-            return redirect()->back()->with('error', $e->message);
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 }

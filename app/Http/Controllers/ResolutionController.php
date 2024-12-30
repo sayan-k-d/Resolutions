@@ -70,7 +70,7 @@ class ResolutionController extends Controller
                 'user_id' => auth()->id(),
             ]);
 
-            return redirect()->route('dashboard')->with('message', 'Resolution saved');
+            return redirect()->route('dashboard')->with('success', 'Another milestone in your journey! Onward to greater things. 💫');
         } catch (\Exception $e) {
             //throw $th;
             return redirect()->back()->with('error', $e->getMessage());

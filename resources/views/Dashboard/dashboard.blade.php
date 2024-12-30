@@ -8,6 +8,7 @@
         </x-slot:auth> --}}
         <div class="dashboard w-100 h-100">
             {{-- @dd(@$name) --}}
+            <canvas id="confetti-canvas"></canvas>
             <div class="container-fluid">
                 <div class="d-flex justify-content-between align-items-center py-4">
                     <h1 class="text-white page-heading-h1">Welcome, {{ Auth::user()->name ?? 'Guest' }}
@@ -32,8 +33,8 @@
 
                     @if ($resolutions->count() == 0)
                         <div class="no-resolutions-container d-flex justify-content-center align-items-center">
-                            {{-- <div id="fireworks"></div> --}}
-                            <canvas id="confetti-canvas"></canvas>
+                            <div id="fireworks"></div>
+
                             <div class="no-resolutions-text animate__animated animate__bounceIn">
                                 <h2>✨ Your Resolution Journal Awaits! ✨</h2>
                                 <p>Ready to conquer your goals? Start by creating your first resolution now! 🚀</p>
@@ -389,7 +390,17 @@
                     icon: "error",
                     text: "{{ session('error') }}",
                     showConfirmButton: false,
-                    timer: 3000
+                    timer: 5000
+                });
+            </script>
+        @endif
+        @if (session('success'))
+            <script>
+                Swal.fire({
+                    icon: "success",
+                    text: "{{ session('success') }}",
+                    showConfirmButton: false,
+                    timer: 5000
                 });
             </script>
         @endif
@@ -488,43 +499,54 @@
             // Adjust on window resize
             window.addEventListener('resize', adjustButtonClass);
         </script>
-        {{-- <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                const container = document.getElementById('fireworks');
-                const fireworks = new Fireworks(container, {
-                    speed: 2,
-                    particles: 150,
-                    intensity: 30,
-                });
-                fireworks.start();
-            });
-        </script> --}}
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                const canvas = document.getElementById('confetti-canvas');
-                const confettiCreation = confetti.create(canvas, {
-                    resize: true,
-                    useWorker: true,
-                });
 
-                const fireConfetti = () => {
-                    confettiCreation({
-                        particleCount: 100,
-                        spread: 70,
-                        origin: {
-                            x: 0.5,
-                            y: 0.5
-                        },
-                        colors: ['#ff6b6b', '#feca57', '#1dd1a1', '#5f27cd', '#54a0ff', '#00d2d3'],
+        @if ($resolutions->count() === 0)
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const container = document.getElementById('fireworks');
+                    const fireworks = new Fireworks(container, {
+                        speed: 2,
+                        particles: 150,
+                        intensity: 30,
                     });
-                };
+                    fireworks.start();
+                    // setTimeout(() => {
+                    //     fireworks.stop();
+                    // }, 5000);
+                });
+            </script>
+        @endif
+        @if (session('success'))
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const canvas = document.getElementById('confetti-canvas');
+                    const confettiCreation = confetti.create(canvas, {
+                        resize: true,
+                        useWorker: true,
+                    });
 
-                fireConfetti();
+                    const fireConfetti = () => {
+                        confettiCreation({
+                            particleCount: 100,
+                            spread: 70,
+                            origin: {
+                                x: 0.5,
+                                y: 0.5
+                            },
+                            colors: ['#ff6b6b', '#feca57', '#1dd1a1', '#5f27cd', '#54a0ff', '#00d2d3'],
+                        });
+                    };
 
-                // Repeat the animation every 2 seconds
-                setInterval(fireConfetti, 2000);
-            });
-        </script>
+                    fireConfetti();
+
+                    // Repeat the animation every 2 seconds
+                    const confettiInterval = setInterval(fireConfetti, 2000);
+                    setTimeout(() => {
+                        clearInterval(confettiInterval);
+                    }, 3000);
+                });
+            </script>
+        @endif
 
     </x-slot:content>
 </x-general>
