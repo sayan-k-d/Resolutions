@@ -207,7 +207,7 @@
                     icon: "error",
                     text: "{{ session('error') }}",
                     showConfirmButton: false,
-                    timer: 1500
+                    timer: 5000
                 });
             </script>
         @endif

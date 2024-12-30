@@ -52,7 +52,6 @@ class ResolutionController extends Controller
     {
         try {
             $data = $request->validate([
-                'name' => 'nullable|string',
                 'description' => 'required|string',
                 'status' => 'nullable|in:checked',
             ]);
@@ -62,7 +61,7 @@ class ResolutionController extends Controller
                 $status = 'public';
             }
             // dd(auth()->id());
-            $name = $data['name'] ? $data['name'] : 'Guest';
+            $name = $request->name ? $request->name : 'Guest';
             Resolution::create([
                 'name' => auth()->user() ? auth()->user()->name : $name,
                 'description' => $data['description'],
