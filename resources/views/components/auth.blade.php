@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="icon" href="{{ asset('assets/img/favicon.png') }}" />
-    @vite(['public/assets/css/style.css', 'public/assets/js/dashboard.js'])
     <style>
         body {
             font-family: "Arial", sans-serif;
