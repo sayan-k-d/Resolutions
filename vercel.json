@@ -24,11 +24,6 @@
         "VIEW_COMPILED_PATH": "/tmp",
         "CACHE_DRIVER": "array",
         "LOG_CHANNEL": "stderr",
-        "SESSION_DRIVER": "cookie",
-        "DB_CONNECTION": "mysql",
-        "DB_HOST": "bj7dpsisfrwrlcgfyg3z-mysql.services.clever-cloud.com",
-        "DB_PORT": "3306",
-        "DB_DATABASE": "bj7dpsisfrwrlcgfyg3z",
-        "DB_USERNAME": "uvk9pntzzlsb9emx"
+        "SESSION_DRIVER": "cookie"
     }
 }
