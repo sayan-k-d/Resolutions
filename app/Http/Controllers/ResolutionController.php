@@ -280,17 +280,19 @@ class ResolutionController extends Controller
     {
         try {
             $reply = Reply::findOrFail($id);
+            // dd($reply);
             $comments = Comment::where('resolution_id', $request->resolution_id)->orderBy('created_at', 'DESC')->get();
             $replies = Reply::where('resolution_id', $request->resolution_id)->orderBy('created_at', 'DESC')->get();
             $likes = auth()->check() ? Like::where('user_id', auth()->id())->pluck('resolution_id')->toArray() : [];
-            foreach ($replies as $reply) {
-                $reply->reply_id = Reply::find($reply->reply_id);
+            foreach ($replies as $data) {
+                $data->reply_id = Reply::find($data->reply_id);
             }
             $resolutionData = Resolution::find($request->resolution_id);
             $resolutions = Resolution::orderBy('created_at', 'DESC')->get();
             $editReply = true;
             $editReplyId = $reply->id;
             $openModal = true;
+            // dd($reply, auth()->id() === $reply->user_id, auth()->id(), $reply->user_id);
             if (auth()->id() === $reply->user_id) {
                 return view('Dashboard.dashboard', compact('openModal', 'reply', 'editReplyId', 'comments', 'replies', 'editReply', 'resolutionData', 'resolutions', 'likes'));
                 // return redirect()->back()->with(['openModal' => true, 'comments' => $comments, 'comment' => $comment, 'editCommentId' => $comment->id, 'replies' => $replies, 'editComment' => true, 'resolutionData' => $resolution, 'resolutions' => $resolutions, 'likes' => $likes]);
@@ -315,8 +317,8 @@ class ResolutionController extends Controller
                 $comments = Comment::where('resolution_id', $request->resolution_id)->orderBy('created_at', 'DESC')->get();
                 $replies = Reply::where('resolution_id', $request->resolution_id)->orderBy('created_at', 'DESC')->get();
                 $likes = auth()->check() ? Like::where('user_id', auth()->id())->pluck('resolution_id')->toArray() : [];
-                foreach ($replies as $reply) {
-                    $reply->reply_id = Reply::find($reply->reply_id);
+                foreach ($replies as $data) {
+                    $data->reply_id = Reply::find($data->reply_id);
                 }
                 $resolution = Resolution::find($request->resolution_id);
                 $resolutions = Resolution::orderBy('created_at', 'DESC')->get();
@@ -337,8 +339,8 @@ class ResolutionController extends Controller
                 $reply->delete();
                 $comments = Comment::where('resolution_id', $request->resolution_id)->orderBy('created_at', 'DESC')->get();
                 $replies = Reply::where('resolution_id', $request->resolution_id)->orderBy('created_at', 'DESC')->get();
-                foreach ($replies as $reply) {
-                    $reply->reply_id = Reply::find($reply->reply_id);
+                foreach ($replies as $data) {
+                    $data->reply_id = Reply::find($data->reply_id);
                 }
                 $resolution = Resolution::find($request->resolution_id);
                 $resolutions = Resolution::orderBy('created_at', 'DESC')->get();

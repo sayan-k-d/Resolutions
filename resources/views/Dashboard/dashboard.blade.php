@@ -324,7 +324,7 @@
                                                                                 </div>
                                                                             @endif
                                                                         </div>
-                                                                        @if (Auth::check() && Auth::user()->id == $reply->user_id)
+                                                                        @if (Auth::check() && Auth::user()->id === $reply->user_id)
                                                                             <form
                                                                                 action="{{ route('editReply', ['id' => $reply->id]) }}"
                                                                                 method="get" class="mx-2">
